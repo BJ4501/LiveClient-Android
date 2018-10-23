@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.LiveStatusFragment">
+
+    <TextView
+        android:id="@+id/tv_msg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/hello_blank_fragment" />
+
+    <!--AppInfo{
+    app_name='BiliLive-go',
+    app_version='0.22.11',
+    build_time='2018-09-02_16:49:27',
+    git_hash='ba62fb4ddd98f141325bc97f3bafaa00c335e351',
+    pid=2980,
+    platform='windows/amd64',
+    go_version='go1.11'}-->
+
+</FrameLayout>

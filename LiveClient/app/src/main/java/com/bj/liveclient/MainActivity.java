@@ -2,9 +2,11 @@ package com.bj.liveclient;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,9 +14,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.bj.liveclient.view.LiveListFragment;
+import com.bj.liveclient.view.LiveSettingFragment;
+import com.bj.liveclient.view.LiveStatusFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +49,14 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        /*FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        LiveStatusFragment fragment1 = new LiveStatusFragment();
+        LiveListFragment fragment2 = new LiveListFragment();
+        transaction.add(R.id.ll_main, fragment2);
+        transaction.commit();
+*/
     }
 
     @Override
@@ -82,12 +99,11 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+            ReplaceFragment("status");
         } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
+            ReplaceFragment("list");
         } else if (id == R.id.nav_manage) {
-
+            ReplaceFragment("setting");
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -97,5 +113,28 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void ReplaceFragment(String tag){
+        if (currentFragment != null) {
+            getSupportFragmentManager().beginTransaction().hide(currentFragment).commit();
+        }
+        currentFragment = getSupportFragmentManager().findFragmentByTag(tag);
+        if (currentFragment == null) {
+            switch (tag) {
+                case "list":
+                    currentFragment = new LiveListFragment();
+                    break;
+                case "status":
+                    currentFragment = new LiveStatusFragment();
+                    break;
+                case "setting":
+                    currentFragment = new LiveSettingFragment();
+                    break;
+            }
+            getSupportFragmentManager().beginTransaction().add(R.id.ll_main, currentFragment, tag).commit();
+        }else {
+            getSupportFragmentManager().beginTransaction().show(currentFragment).commit();
+        }
     }
 }

@@ -6,7 +6,6 @@ package com.bj.liveclient.model;
  */
 public class LiveInfo {
 
-
     /**
      * id : 94d6fe233dc6f184d3dd78b6a73ee571
      * live_url : https://live.bilibili.com/1010
