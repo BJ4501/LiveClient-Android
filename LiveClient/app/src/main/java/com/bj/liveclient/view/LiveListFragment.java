@@ -50,7 +50,6 @@ public class LiveListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View inflate = inflater.inflate(R.layout.fragment_live_list, container, false);
         // Inflate the layout for this fragment
-        final TextView textView = inflate.findViewById(R.id.tv_msg);
         final RecyclerView recyclerView = inflate.findViewById(R.id.rv_list);
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -67,8 +66,6 @@ public class LiveListFragment extends Fragment {
             @Override
             public void onResponse(Call<RspModel<List<LiveInfo>>> call, Response<RspModel<List<LiveInfo>>> response) {
                 Log.d(TAG,response.body().getData().toString());
-
-                //textView.setText(response.body().getData().toString());
                 data = response.body().getData();
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setAdapter(new LiveInfoAdapter(data, getContext()));
@@ -79,8 +76,6 @@ public class LiveListFragment extends Fragment {
 
             }
         });
-
-
 
         return inflate;
     }

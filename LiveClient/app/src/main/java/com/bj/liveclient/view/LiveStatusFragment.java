@@ -38,14 +38,18 @@ public class LiveStatusFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View inflate = inflater.inflate(R.layout.fragment_live_status, container, false);
-        // Inflate the layout for this fragment
-        final TextView textView = inflate.findViewById(R.id.tv_msg);
+        //Status Item
+        TextView appName = inflate.findViewById(R.id.tv_app_name);
+        TextView appVersion = inflate.findViewById(R.id.tv_app_version);
+        TextView buildTime = inflate.findViewById(R.id.tv_build_time);
+        TextView pid = inflate.findViewById(R.id.tv_pid);
+        TextView platform = inflate.findViewById(R.id.tv_platform);
+        TextView goVersion = inflate.findViewById(R.id.tv_go_version);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(Store.IP + ":" + Store.PORT)
                 .build();
-
         Api request = retrofit.create(Api.class);
         Call<RspModel<AppInfo>> call = request.getAppInfo();
 
@@ -54,7 +58,12 @@ public class LiveStatusFragment extends Fragment {
             @Override
             public void onResponse(Call<RspModel<AppInfo>> call, Response<RspModel<AppInfo>> response) {
                 Log.d(TAG,response.body().getData().toString());
-                textView.setText(response.body().getData().toString());
+                appName.setText(response.body().getData().getApp_name());
+                appVersion.setText(response.body().getData().getApp_version());
+                buildTime.setText(response.body().getData().getBuild_time());
+                pid.setText(String.valueOf(response.body().getData().getPid()));
+                platform.setText(response.body().getData().getPlatform());
+                goVersion.setText(response.body().getData().getGo_version());
             }
 
             @Override

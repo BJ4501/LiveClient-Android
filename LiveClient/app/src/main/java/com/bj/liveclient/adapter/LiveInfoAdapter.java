@@ -1,15 +1,22 @@
 package com.bj.liveclient.adapter;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.beardedhen.androidbootstrap.api.attributes.BootstrapBrand;
+import com.beardedhen.androidbootstrap.api.defaults.ButtonMode;
+import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
 import com.bj.liveclient.R;
 import com.bj.liveclient.model.LiveInfo;
+import com.bj.liveclient.utils.PlatformPicSelector;
 
 import java.util.List;
 
@@ -38,8 +45,30 @@ public class LiveInfoAdapter extends RecyclerView.Adapter<LiveInfoAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.roomLogo.setImageDrawable(mContext.getResources().getDrawable(
+                PlatformPicSelector.Selector(mLiveInfoList.get(position).getPlatform_cn_name())));
         holder.roomName.setText(mLiveInfoList.get(position).getRoom_name());
-        holder.roomStatus.setText(mLiveInfoList.get(position).getPlatform_cn_name());
+        holder.platformName.setText(mLiveInfoList.get(position).getPlatform_cn_name());
+        holder.liveUrl.setText(mLiveInfoList.get(position).getLive_url());
+        holder.hostName.setText(mLiveInfoList.get(position).getHost_name());
+
+        if (mLiveInfoList.get(position).isStatus()){
+            holder.btnStatus.setBootstrapBrand(DefaultBootstrapBrand.SUCCESS);
+        }else {
+            holder.btnStatus.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
+        }
+
+        if (mLiveInfoList.get(position).isListening()){
+            holder.btnListening.setBootstrapBrand(DefaultBootstrapBrand.SUCCESS);
+        }else {
+            holder.btnListening.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
+        }
+
+        if (mLiveInfoList.get(position).isRecoding()){
+            holder.btnRecording.setBootstrapBrand(DefaultBootstrapBrand.SUCCESS);
+        }else {
+            holder.btnRecording.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
+        }
     }
 
     @Override
@@ -48,12 +77,24 @@ public class LiveInfoAdapter extends RecyclerView.Adapter<LiveInfoAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
+        ImageView roomLogo;
+        TextView liveUrl;
+        TextView platformName;
         TextView roomName;
-        TextView roomStatus;
+        TextView hostName;
+        BootstrapButton btnStatus;
+        BootstrapButton btnListening;
+        BootstrapButton btnRecording;
         public ViewHolder(View itemView) {
             super(itemView);
+            roomLogo = itemView.findViewById(R.id.iv_room_logo);
+            liveUrl = itemView.findViewById(R.id.tv_live_url);
+            platformName = itemView.findViewById(R.id.tv_platform_name);
             roomName = itemView.findViewById(R.id.tv_room_name);
-            roomStatus = itemView.findViewById(R.id.tv_room_status);
+            hostName = itemView.findViewById(R.id.tv_host_name);
+            btnStatus = itemView.findViewById(R.id.btn_status);
+            btnListening = itemView.findViewById(R.id.btn_listening);
+            btnRecording = itemView.findViewById(R.id.btn_record);
         }
     }
 }
