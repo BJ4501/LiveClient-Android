@@ -19,7 +19,6 @@ import com.bj.liveclient.utils.PreferencesUtils;
  */
 public class LiveSettingFragment extends Fragment {
 
-
     public LiveSettingFragment() {
         // Required empty public constructor
     }

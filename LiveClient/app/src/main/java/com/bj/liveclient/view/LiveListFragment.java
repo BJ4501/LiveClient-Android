@@ -9,18 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import com.bj.liveclient.MainActivity;
 import com.bj.liveclient.R;
 import com.bj.liveclient.adapter.LiveInfoAdapter;
 import com.bj.liveclient.common.Store;
-import com.bj.liveclient.model.AppInfo;
-import com.bj.liveclient.model.LiveInfo;
-import com.bj.liveclient.model.RspModel;
-import com.bj.liveclient.net.Api;
+import com.bj.liveclient.model.response.LiveInfo;
+import com.bj.liveclient.model.response.RspModel;
 import com.bj.liveclient.net.Net;
 import com.bj.liveclient.utils.PreferencesUtils;
 
@@ -30,8 +24,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * 直播信息列表
@@ -57,17 +49,6 @@ public class LiveListFragment extends Fragment {
         if (url.equals("")){
             url = Store.BASIC_URL;
         }
-
-/*        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(url)
-                .build();
-
-        final Api request = retrofit.create(Api.class);*/
-
-
-
-//        Call<RspModel<List<LiveInfo>>> call = request.getLives();
 
         Call<RspModel<List<LiveInfo>>> call = Net.create(getContext()).getLives();
 

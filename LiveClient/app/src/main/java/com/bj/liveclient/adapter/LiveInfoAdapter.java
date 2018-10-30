@@ -1,7 +1,6 @@
 package com.bj.liveclient.adapter;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,11 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.beardedhen.androidbootstrap.api.attributes.BootstrapBrand;
-import com.beardedhen.androidbootstrap.api.defaults.ButtonMode;
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
 import com.bj.liveclient.R;
-import com.bj.liveclient.model.LiveInfo;
+import com.bj.liveclient.model.response.LiveInfo;
 import com.bj.liveclient.utils.PlatformPicSelector;
 
 import java.util.List;

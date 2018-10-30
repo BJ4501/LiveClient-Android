@@ -10,16 +10,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bj.liveclient.R;
-import com.bj.liveclient.common.Store;
-import com.bj.liveclient.model.AppInfo;
-import com.bj.liveclient.model.RspModel;
-import com.bj.liveclient.net.Api;
+import com.bj.liveclient.model.response.AppInfo;
+import com.bj.liveclient.model.response.RspModel;
+import com.bj.liveclient.net.Net;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * 录播机状态
@@ -46,24 +43,21 @@ public class LiveStatusFragment extends Fragment {
         TextView platform = inflate.findViewById(R.id.tv_platform);
         TextView goVersion = inflate.findViewById(R.id.tv_go_version);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(Store.IP + ":" + Store.PORT)
-                .build();
-        Api request = retrofit.create(Api.class);
-        Call<RspModel<AppInfo>> call = request.getAppInfo();
+        Call<RspModel<AppInfo>> call = Net.create(getContext()).getAppInfo();
 
         //发送请求与回调
         call.enqueue(new Callback<RspModel<AppInfo>>() {
             @Override
             public void onResponse(Call<RspModel<AppInfo>> call, Response<RspModel<AppInfo>> response) {
-                Log.d(TAG,response.body().getData().toString());
-                appName.setText(response.body().getData().getApp_name());
-                appVersion.setText(response.body().getData().getApp_version());
-                buildTime.setText(response.body().getData().getBuild_time());
-                pid.setText(String.valueOf(response.body().getData().getPid()));
-                platform.setText(response.body().getData().getPlatform());
-                goVersion.setText(response.body().getData().getGo_version());
+                if(response.body() != null){
+                    Log.d(TAG,response.body().getData().toString());
+                    appName.setText(response.body().getData().getApp_name());
+                    appVersion.setText(response.body().getData().getApp_version());
+                    buildTime.setText(response.body().getData().getBuild_time());
+                    pid.setText(String.valueOf(response.body().getData().getPid()));
+                    platform.setText(response.body().getData().getPlatform());
+                    goVersion.setText(response.body().getData().getGo_version());
+                }
             }
 
             @Override

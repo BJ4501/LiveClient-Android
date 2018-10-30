@@ -1,4 +1,4 @@
-package com.bj.liveclient.model;
+package com.bj.liveclient.model.response;
 
 /**
  * Date: 2018/10/23
