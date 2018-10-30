@@ -6,8 +6,9 @@ package com.bj.liveclient.common;
  */
 public class Store {
 
+    public static final String URL_KEY = "URL";
+    public static final String BASIC_URL = "http://www.google.com";
     public static final String IP = "http://192.168.100.182";
-
     public static final String PORT = "9090";
 
     //LivePlatformCNNameMap

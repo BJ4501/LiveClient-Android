@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bj.liveclient.R;
+import com.bj.liveclient.common.Store;
+import com.bj.liveclient.utils.PreferencesUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,12 +32,14 @@ public class LiveSettingFragment extends Fragment {
 
         EditText editText = view.findViewById(R.id.et_url);
         Button button = view.findViewById(R.id.btn_save);
-
         button.setOnClickListener(view1 -> {
             String s = editText.getText().toString();
-            Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+            if (s.equals("")){
+                Toast.makeText(getContext(), "Not a URL", Toast.LENGTH_SHORT).show();
+            }else {
+                PreferencesUtils.putString(view.getContext(), Store.URL_KEY, s);
+            }
         });
-
         return view;
     }
 

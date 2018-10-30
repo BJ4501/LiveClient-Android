@@ -1,10 +1,12 @@
 package com.bj.liveclient.net;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.bj.liveclient.common.Store;
 import com.bj.liveclient.model.AppInfo;
 import com.bj.liveclient.model.RspModel;
+import com.bj.liveclient.utils.PreferencesUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,6 +44,21 @@ public class Net {
                 Log.d(TAG,t.getMessage());
             }
         });
+    }
+
+    public static Api create(Context context){
+        String url = PreferencesUtils.getString(context, Store.URL_KEY, "");
+        if (url.equals("")){
+            url = Store.BASIC_URL;
+        }
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(url)
+                .build();
+
+        Log.d(TAG,"url: " + url);
+
+        return retrofit.create(Api.class);
     }
 
 }

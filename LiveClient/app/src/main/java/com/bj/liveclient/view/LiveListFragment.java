@@ -21,6 +21,8 @@ import com.bj.liveclient.model.AppInfo;
 import com.bj.liveclient.model.LiveInfo;
 import com.bj.liveclient.model.RspModel;
 import com.bj.liveclient.net.Api;
+import com.bj.liveclient.net.Net;
+import com.bj.liveclient.utils.PreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,29 +53,39 @@ public class LiveListFragment extends Fragment {
         View inflate = inflater.inflate(R.layout.fragment_live_list, container, false);
         // Inflate the layout for this fragment
         final RecyclerView recyclerView = inflate.findViewById(R.id.rv_list);
+        String url = PreferencesUtils.getString(inflate.getContext(), Store.URL_KEY, "");
+        if (url.equals("")){
+            url = Store.BASIC_URL;
+        }
 
-        Retrofit retrofit = new Retrofit.Builder()
+/*        Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(Store.IP + ":" + Store.PORT)
+                .baseUrl(url)
                 .build();
 
-        final Api request = retrofit.create(Api.class);
+        final Api request = retrofit.create(Api.class);*/
 
-        Call<RspModel<List<LiveInfo>>> call = request.getLives();
+
+
+//        Call<RspModel<List<LiveInfo>>> call = request.getLives();
+
+        Call<RspModel<List<LiveInfo>>> call = Net.create(getContext()).getLives();
 
         //发送请求与回调
         call.enqueue(new Callback<RspModel<List<LiveInfo>>>() {
             @Override
             public void onResponse(Call<RspModel<List<LiveInfo>>> call, Response<RspModel<List<LiveInfo>>> response) {
-                Log.d(TAG,response.body().getData().toString());
-                data = response.body().getData();
+                if(response.body() != null){
+                    Log.d(TAG,response.body().getData().toString());
+                    data = response.body().getData();
+                }
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setAdapter(new LiveInfoAdapter(data, getContext()));
             }
 
             @Override
             public void onFailure(Call<RspModel<List<LiveInfo>>> call, Throwable t) {
-
+                Log.d(TAG,t.getMessage());
             }
         });
 
