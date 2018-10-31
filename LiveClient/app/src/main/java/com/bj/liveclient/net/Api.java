@@ -44,11 +44,11 @@ public interface Api {
 
     //开启对{id}房间的监听
     @GET("/lives/{id}/start")
-    Call<RspModel<LiveInfo>> startListenById(@Path("id")int id);
+    Call<RspModel<LiveInfo>> startListenById(@Path("id")String id);
 
     //停止对{id}房间的监听
     @GET("/lives/{id}/stop")
-    Call<RspModel<LiveInfo>> stopListenById(@Path("id")int id);
+    Call<RspModel<LiveInfo>> stopListenById(@Path("id")String id);
 
     //配置项信息
     @GET("/config")

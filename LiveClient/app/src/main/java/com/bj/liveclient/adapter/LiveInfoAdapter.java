@@ -2,6 +2,8 @@ package com.bj.liveclient.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +28,8 @@ public class LiveInfoAdapter extends RecyclerView.Adapter<LiveInfoAdapter.ViewHo
     private List<LiveInfo> mLiveInfoList;
 
     private Context mContext;
+
+    private OnItemClickListener mOnItemClickListener;
 
     public LiveInfoAdapter(List<LiveInfo> mLiveInfoList, Context mContext) {
         this.mLiveInfoList = mLiveInfoList;
@@ -66,6 +70,11 @@ public class LiveInfoAdapter extends RecyclerView.Adapter<LiveInfoAdapter.ViewHo
         }else {
             holder.btnRecording.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
         }
+
+        holder.cardView.setOnClickListener(view -> {
+            mOnItemClickListener.onItemClick(view, position);
+        });
+
     }
 
     @Override
@@ -74,6 +83,7 @@ public class LiveInfoAdapter extends RecyclerView.Adapter<LiveInfoAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
+        CardView cardView;
         ImageView roomLogo;
         TextView liveUrl;
         TextView platformName;
@@ -84,6 +94,7 @@ public class LiveInfoAdapter extends RecyclerView.Adapter<LiveInfoAdapter.ViewHo
         BootstrapButton btnRecording;
         public ViewHolder(View itemView) {
             super(itemView);
+            cardView = itemView.findViewById(R.id.cv_live_room);
             roomLogo = itemView.findViewById(R.id.iv_room_logo);
             liveUrl = itemView.findViewById(R.id.tv_live_url);
             platformName = itemView.findViewById(R.id.tv_platform_name);
@@ -93,5 +104,17 @@ public class LiveInfoAdapter extends RecyclerView.Adapter<LiveInfoAdapter.ViewHo
             btnListening = itemView.findViewById(R.id.btn_listening);
             btnRecording = itemView.findViewById(R.id.btn_record);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public OnItemClickListener getmOnItemClickListener() {
+        return mOnItemClickListener;
+    }
+
+    public void setmOnItemClickListener(OnItemClickListener mOnItemClickListener) {
+        this.mOnItemClickListener = mOnItemClickListener;
     }
 }
