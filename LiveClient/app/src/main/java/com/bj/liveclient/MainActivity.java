@@ -1,5 +1,6 @@
 package com.bj.liveclient;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.bj.liveclient.view.AddLiveRoomActivity;
 import com.bj.liveclient.view.LiveListFragment;
 import com.bj.liveclient.view.LiveSettingFragment;
 import com.bj.liveclient.view.LiveStatusFragment;
@@ -70,6 +72,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, AddLiveRoomActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -82,16 +86,14 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_status) {
             // Handle the camera action
             ReplaceFragment("status");
         } else if (id == R.id.nav_gallery) {
             ReplaceFragment("list");
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_live_list) {
             ReplaceFragment("setting");
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_about) {
 
         }
 

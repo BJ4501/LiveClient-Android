@@ -7,7 +7,8 @@ package com.bj.liveclient.common;
 public class Store {
 
     public static final String URL_KEY = "URL";
-    public static final String BASIC_URL = "http://www.google.com";
+//    public static final String BASIC_URL = "http://www.google.com";
+    public static final String BASIC_URL = "http://192.168.100.182:9090";
     public static final String IP = "http://192.168.100.182";
     public static final String PORT = "9090";
 
@@ -24,5 +25,8 @@ public class Store {
     public static final String LIVE_QUANMIN = "全民";
     public static final String LIVE_CC = "CC直播";
     public static final String LIVE_OPENREC = "openrec";
+
+    //Rsp Code
+    public static final int RSP_OK = 0;
 
 }

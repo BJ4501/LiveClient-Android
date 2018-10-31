@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.bj.liveclient.R;
 import com.bj.liveclient.adapter.LiveInfoAdapter;
+import com.bj.liveclient.common.Store;
 import com.bj.liveclient.model.response.LiveInfo;
 import com.bj.liveclient.model.response.RspModel;
 import com.bj.liveclient.net.Net;
@@ -33,18 +34,21 @@ public class LiveListFragment extends Fragment {
 
     private static final String TAG = "LiveListFragment";
 
-    private List<LiveInfo> data = new ArrayList<>();
+    private List<LiveInfo> mData = new ArrayList<>();
+
+    private LiveInfoAdapter mLiveInfoAdapter;
+
+    private RecyclerView mRecyclerView;
 
     public LiveListFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View inflate = inflater.inflate(R.layout.fragment_live_list, container, false);
-        // Inflate the layout for this fragment
-        final RecyclerView recyclerView = inflate.findViewById(R.id.rv_list);
+        mRecyclerView = inflate.findViewById(R.id.rv_list);
 
         Call<RspModel<List<LiveInfo>>> call = Net.create(getContext()).getLives();
 
@@ -54,14 +58,22 @@ public class LiveListFragment extends Fragment {
             public void onResponse(Call<RspModel<List<LiveInfo>>> call, Response<RspModel<List<LiveInfo>>> response) {
                 if(response.body() != null){
                     Log.d(TAG,response.body().getData().toString());
-                    data = response.body().getData();
+                    mData = response.body().getData();
                 }
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                LiveInfoAdapter liveInfoAdapter = new LiveInfoAdapter(data, getContext());
-                liveInfoAdapter.setmOnItemClickListener((view, position) -> {
-                    liveClick(position);
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                mLiveInfoAdapter = new LiveInfoAdapter(mData, getContext());
+                mLiveInfoAdapter.setmOnItemClickListener(new LiveInfoAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        liveClick(position);
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+                        liveLongClick(position);
+                    }
                 });
-                recyclerView.setAdapter(liveInfoAdapter);
+                mRecyclerView.setAdapter(mLiveInfoAdapter);
             }
 
             @Override
@@ -73,9 +85,13 @@ public class LiveListFragment extends Fragment {
         return inflate;
     }
 
+    /**
+     * 短按可选择是否监听
+     * @param position
+     */
     private void liveClick(int position) {
-        String id = data.get(position).getId();
-        boolean listening = data.get(position).isListening();
+        String id = mData.get(position).getId();
+        boolean listening = mData.get(position).isListening();
         String msg;
         if(listening){
             msg = "取消监听该直播间?";
@@ -92,9 +108,12 @@ public class LiveListFragment extends Fragment {
                 call.enqueue(new Callback<RspModel<LiveInfo>>() {
                     @Override
                     public void onResponse(Call<RspModel<LiveInfo>> call, Response<RspModel<LiveInfo>> response) {
-                        Toast.makeText(getContext(), "OK", Toast.LENGTH_SHORT).show();
-
-                        //刷新RV 替换datalist 并 notifychanged
+                        if (response.body().getErr_no() == Store.RSP_OK){
+                            mData.set(position, response.body().getData());
+                            mLiveInfoAdapter.setDataList(mData);
+                        }else {
+                            Toast.makeText(getContext(), "关闭监听失败，请重试", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -108,7 +127,12 @@ public class LiveListFragment extends Fragment {
                 call.enqueue(new Callback<RspModel<LiveInfo>>() {
                     @Override
                     public void onResponse(Call<RspModel<LiveInfo>> call, Response<RspModel<LiveInfo>> response) {
-                        Toast.makeText(getContext(), "OK", Toast.LENGTH_SHORT).show();
+                        if (response.body().getErr_no() == Store.RSP_OK){
+                            mData.set(position, response.body().getData());
+                            mLiveInfoAdapter.setDataList(mData);
+                        }else {
+                            Toast.makeText(getContext(), "开启监听失败，请重试", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -117,6 +141,41 @@ public class LiveListFragment extends Fragment {
                     }
                 });
             }
+        });
+        builder.setNegativeButton("CANCEL", (dialogInterface, i) -> {
+            //do nothing
+        });
+        builder.show();
+    }
+
+    /**
+     * 当被长点击的时候可以选择删除
+     * @param position
+     */
+    private void liveLongClick(int position) {
+        String id = mData.get(position).getId();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("LiveClient");
+        builder.setMessage("是否要删除当前直播间?");
+        builder.setPositiveButton("OK", (dialogInterface, i) -> {
+            Call<RspModel> call = Net.create(getContext()).deleteById(id);
+            call.enqueue(new Callback<RspModel>() {
+                @Override
+                public void onResponse(Call<RspModel> call, Response<RspModel> response){
+                    Log.d(TAG, "onResponse: " + response.body().toString());
+                    if (response.body().getErr_no() == Store.RSP_OK){
+                        mData.remove(position);
+                        mLiveInfoAdapter.setDataList(mData);
+                    }else {
+                        Toast.makeText(getContext(), "删除失败，请重试", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<RspModel> call, Throwable t) {
+
+                }
+            });
         });
         builder.setNegativeButton("CANCEL", (dialogInterface, i) -> {
             //do nothing

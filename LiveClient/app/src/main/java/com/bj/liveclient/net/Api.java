@@ -40,7 +40,7 @@ public interface Api {
 
     //根据id删除直播间
     @DELETE("/lives/{id}")
-    Call<RspModel> deleteById(@Path("id")int id);
+    Call<RspModel> deleteById(@Path("id")String id);
 
     //开启对{id}房间的监听
     @GET("/lives/{id}/start")

@@ -75,6 +75,18 @@ public class LiveInfoAdapter extends RecyclerView.Adapter<LiveInfoAdapter.ViewHo
             mOnItemClickListener.onItemClick(view, position);
         });
 
+        holder.cardView.setOnLongClickListener(view -> {
+            mOnItemClickListener.onItemLongClick(view, position);
+            return true;
+        });
+
+    }
+
+    public void setDataList(List<LiveInfo> mLiveInfoList){
+        if (mLiveInfoList != null){
+            this.mLiveInfoList = mLiveInfoList;
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -108,6 +120,7 @@ public class LiveInfoAdapter extends RecyclerView.Adapter<LiveInfoAdapter.ViewHo
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
+        void onItemLongClick(View view, int position);
     }
 
     public OnItemClickListener getmOnItemClickListener() {
