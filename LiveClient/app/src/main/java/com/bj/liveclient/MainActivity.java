@@ -89,9 +89,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_status) {
             // Handle the camera action
             ReplaceFragment("status");
-        } else if (id == R.id.nav_gallery) {
-            ReplaceFragment("list");
         } else if (id == R.id.nav_live_list) {
+            ReplaceFragment("list");
+        } else if (id == R.id.nav_manage) {
             ReplaceFragment("setting");
         } else if (id == R.id.nav_about) {
 
