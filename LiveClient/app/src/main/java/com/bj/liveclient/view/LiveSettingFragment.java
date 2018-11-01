@@ -20,13 +20,12 @@ import com.bj.liveclient.utils.PreferencesUtils;
 public class LiveSettingFragment extends Fragment {
 
     public LiveSettingFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_live_setting, container, false);
 
         EditText editText = view.findViewById(R.id.et_url);

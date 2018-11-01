@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.bj.liveclient.view.AboutFragment;
 import com.bj.liveclient.view.AddLiveRoomActivity;
 import com.bj.liveclient.view.LiveListFragment;
 import com.bj.liveclient.view.LiveSettingFragment;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Fragment currentFragment;
+    private boolean isShowMenu = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +73,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.item_add_live_room) {
             Intent intent = new Intent(this, AddLiveRoomActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, 1);
+
             return true;
         }
 
@@ -87,14 +90,17 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_status) {
-            // Handle the camera action
+            isShowMenu = false;
             ReplaceFragment("status");
         } else if (id == R.id.nav_live_list) {
+            isShowMenu = true;
             ReplaceFragment("list");
         } else if (id == R.id.nav_manage) {
+            isShowMenu = false;
             ReplaceFragment("setting");
         } else if (id == R.id.nav_about) {
-
+            isShowMenu = false;
+            ReplaceFragment("about");
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -122,10 +128,24 @@ public class MainActivity extends AppCompatActivity
                 case "setting":
                     currentFragment = new LiveSettingFragment();
                     break;
+                case "about":
+                    currentFragment = new AboutFragment();
+                    break;
             }
             getSupportFragmentManager().beginTransaction().add(R.id.ll_main, currentFragment, tag).commit();
         }else {
             getSupportFragmentManager().beginTransaction().show(currentFragment).commit();
         }
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(isShowMenu){
+            menu.findItem(R.id.item_add_live_room).setVisible(true);
+        }else {
+            menu.findItem(R.id.item_add_live_room).setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 }

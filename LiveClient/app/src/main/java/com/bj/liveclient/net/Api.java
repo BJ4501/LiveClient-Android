@@ -1,10 +1,10 @@
 package com.bj.liveclient.net;
 
+import com.bj.liveclient.model.request.Lives;
 import com.bj.liveclient.model.response.AppInfo;
 import com.bj.liveclient.model.response.ConfigInfo;
 import com.bj.liveclient.model.response.LiveInfo;
 import com.bj.liveclient.model.response.RspModel;
-import com.bj.liveclient.model.request.Live;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public interface Api {
 
     //添加直播间
     @POST("/lives")
-    Call<RspModel<LiveInfo>> addLive(@Body List<Live> liveList);
+    Call<RspModel<List<LiveInfo>>> addLive(@Body Lives lives);
 
     //根据id删除直播间
     @DELETE("/lives/{id}")

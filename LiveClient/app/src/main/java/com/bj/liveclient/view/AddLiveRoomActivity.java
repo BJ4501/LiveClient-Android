@@ -1,7 +1,10 @@
 package com.bj.liveclient.view;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -11,24 +14,40 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bj.liveclient.R;
+import com.bj.liveclient.model.request.Live;
+import com.bj.liveclient.model.request.Lives;
+import com.bj.liveclient.model.response.LiveInfo;
+import com.bj.liveclient.model.response.RspModel;
+import com.bj.liveclient.net.Net;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AddLiveRoomActivity extends AppCompatActivity {
 
     private Spinner mSpinner;
     private EditText mRoomNumber;
     private Button mBtnAddRoom;
-
     private List<Map<String,Object>> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_live_room);
+
+        //ActionBar 返回
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("添加直播间");
+        }
 
         mSpinner = findViewById(R.id.lr_spinner);
         mRoomNumber = findViewById(R.id.et_room_num);
@@ -44,7 +63,8 @@ public class AddLiveRoomActivity extends AppCompatActivity {
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                String text = mList.get(i).get("text").toString();
+                mBtnAddRoom.setText(text);
             }
 
             @Override
@@ -57,6 +77,55 @@ public class AddLiveRoomActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Success", Toast.LENGTH_SHORT).show();
             finish();
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_check, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish(); // back button
+                return true;
+            case R.id.item_check:
+                String url = "https://www.panda.tv/10086";
+                addLiveRoom(url);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    //添加直播间
+    private void addLiveRoom(String url) {
+        Live live = new Live(url, true);
+        List<Live> liveList = new ArrayList<>();
+        liveList.add(live);
+        Lives lives = new Lives();
+        lives.setLives(liveList);
+
+        Net.create(this).addLive(lives).enqueue(new Callback<RspModel<List<LiveInfo>>>() {
+            @Override
+            public void onResponse(Call<RspModel<List<LiveInfo>>> call, Response<RspModel<List<LiveInfo>>> response) {
+                if(response.body().getErr_no() == 0){
+                    Intent intent = new Intent();
+                    intent.putExtra("refresh", true);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }else {
+                    Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RspModel<List<LiveInfo>>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     //PlatformDataList

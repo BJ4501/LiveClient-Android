@@ -14,6 +14,14 @@ public class Live {
     private String url;
     private boolean listen;
 
+    public Live() {
+    }
+
+    public Live(String url, boolean listen) {
+        this.url = url;
+        this.listen = listen;
+    }
+
     public String getUrl() {
         return url;
     }

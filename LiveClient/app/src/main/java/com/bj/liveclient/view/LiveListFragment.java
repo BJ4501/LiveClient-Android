@@ -1,6 +1,7 @@
 package com.bj.liveclient.view;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -183,4 +184,32 @@ public class LiveListFragment extends Fragment {
         builder.show();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Bundle bundle = data.getExtras();
+        boolean flag = bundle.getBoolean("refresh");
+        if(flag){
+            refreshList();
+        }
+    }
+
+    //列表刷新
+    private void refreshList() {
+        Net.create(getContext()).getLives().enqueue(new Callback<RspModel<List<LiveInfo>>>() {
+            @Override
+            public void onResponse(Call<RspModel<List<LiveInfo>>> call, Response<RspModel<List<LiveInfo>>> response) {
+                if(response.body() != null){
+                    Log.d(TAG,"refresh : " + response.body().getData().toString());
+                    mData = response.body().getData();
+                }
+                mLiveInfoAdapter.setDataList(mData);
+            }
+
+            @Override
+            public void onFailure(Call<RspModel<List<LiveInfo>>> call, Throwable t) {
+                Log.d(TAG, t.getMessage());
+            }
+        });
+    }
 }
