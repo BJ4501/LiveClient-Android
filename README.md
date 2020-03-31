@@ -3,6 +3,9 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/aa26a0891b93451683836ed79ea108e7)](https://app.codacy.com/app/BJ4501/LiveClient-Android?utm_source=github.com&utm_medium=referral&utm_content=BJ4501/LiveClient-Android&utm_campaign=Badge_Grade_Dashboard)
 [![JMeowTech](https://img.shields.io/badge/Team-JMeowTech-blue.svg)](http://www.jmeow.org)
 
+**Deprecated提示**  
+**此项目已过时不可用，Bililive-go现已支持Web管理页面。**
+
 LiveClient-Android是用于在Android端对Bililive-go进行管理的Android应用。
 
 ## 使用之前
